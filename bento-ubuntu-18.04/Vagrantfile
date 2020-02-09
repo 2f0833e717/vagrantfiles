@@ -1,0 +1,93 @@
+#vagrant plugin auto install script.
+
+#if cant use clipboad =>hostOS@win10(CommandPrompt)
+#path::{vagrant-folder}=>$vagrant plugin install vagrant-vbguest
+
+#how to use japanese ubuntu 18.04
+#https://linuxfan.info/ubuntu-18-04-japanese-input
+
+#if ubuntu cant use "sudo apt-get update"
+#=>vagrant reload
+
+#if ubuntu use su -
+#=> sudo -i
+
+
+
+vmname = "test2"
+
+
+if ARGV[0] == 'up'
+	plugins_dependencies = %w(	vagrant-vbguest
+							 	vagrant-proxyconf
+							 	vagrant-disksize
+							 	vagrant-docker-compose ) # <<-- list up plugins here.
+
+		plugin_status = false
+		plugins_dependencies.each do |plugin_name|
+			unless Vagrant.has_plugin? plugin_name
+			puts "#{plugin_name} is required."
+			system("vagrant plugin install #{plugin_name}")
+			plugin_status = true
+		end
+	end
+	#Restart Vagrant if any new plugin installed
+	if plugin_status === true
+		exec "vagrant #{ARGV.join' '}"
+	else
+		puts "All Plugin Dependencies already installed"
+	end
+end
+
+
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	config.vm.box = "bento/ubuntu-18.04"
+	config.vm.box_check_update = false
+	#bug fix https://qiita.com/sola-msr/items/ce6ea764b5236554cb32
+	if Vagrant.has_plugin?("vagrant-vbguest")
+		config.vbguest.auto_update = false  
+	end
+	#config.vbguest.auto_update = false
+	config.vbguest.no_remote = true
+	config.ssh.insert_key = true
+	config.vm.network "private_network", ip: "192.168.33.10"
+	#config.vm.network "forwarded_port", guest: 80, host: 8080
+	config.vm.synced_folder "./shareVagrant", "/shareVagrant",create:"true"
+	#config.disksize.size = '10GB' # vagrant-disksizeが必要、ディスク容量は増やす方向にしか変更できない
+	config.vm.provider "virtualbox" do |vb|
+		vb.gui = true
+		vb.name = vmname
+		vb.cpus = 4
+		vb.memory = "8192"
+		vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+		vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
+		vb.customize [
+		"modifyvm", :id,
+		"--vram", "256",
+		"--cpuexecutioncap", "50",
+		]
+	end
+
+
+	config.vm.provision "shell", inline: "echo '########start provision########'"
+	#https://www.ubuntulinux.jp/japanese
+	config.vm.provision :shell, :inline => <<-EOS
+	    wget -q https://www.ubuntulinux.jp/ubuntu-ja-archive-keyring.gpg -O- | sudo apt-key add -
+	    wget -q https://www.ubuntulinux.jp/ubuntu-jp-ppa-keyring.gpg -O- | sudo apt-key add -
+	    sudo wget https://www.ubuntulinux.jp/sources.list.d/bionic.list -O /etc/apt/sources.list.d/ubuntu-ja.list
+	    sudo apt-get update
+	    sudo apt-get upgrade -y
+	    sudo apt-get full-upgrade -y
+	    sudo apt-get autoremove -y
+	    sudo apt-get autoclean
+	    sudo apt-get clean
+	    #sudo apt-get install -y ubuntu-desktop ubuntu-defaults-ja aptitude curl dnsutils lsof zip unzip lsb-release tree man
+	    sudo apt-get install ubuntu-defaults-ja
+	    sudo timedatectl set-timezone Asia/Tokyo
+	    #sudo update-alternatives --set editor $(update-alternatives --list editor | grep 'vim.basic')
+		EOS
+	config.vm.provision "shell", inline: "echo '########finish provision########'"
+end
