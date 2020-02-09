@@ -44,11 +44,17 @@ VirtualBox get virtual-machine-list command
 VBoxManage list vms
 ```
 
-vagrant init,start,restart virtual-machine command
+vagrant init,start,restart,shutdown virtual-machine command
 ```
 vagrant init
 vagrant up
 vagrant reload
+vagrant halt
+```
+
+vagrant ssh connection command
+```
+vagrant ssh
 ```
 
 ## !WARNING
