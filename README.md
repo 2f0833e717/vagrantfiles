@@ -57,6 +57,13 @@ vagrant ssh connection command
 vagrant ssh
 ```
 
+vagrant plugin command
+```
+vagrant plugin list
+vagrant plugin install {plugin-name1} {plugin-name2}
+vagrant plugin uninstall {plugin-name1} {plugin-name2}
+```
+
 ## !WARNING
 vagrant deleate virtual-machine command
 ```
