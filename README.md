@@ -59,7 +59,7 @@ vagrant destory -f {virtual-machine-name}
 
 VirtualBox deleate virtual-machine command
 ```
-VBoxManage unregistervm test_vm --delete
+VBoxManage unregistervm {virtual-machine-name} --delete
 ```
 
 # Trouble Shooting
