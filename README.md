@@ -30,7 +30,7 @@ Yes
 ### On command prompt
 If use VBoxManage
 ```
-$set PATH=%PATH%;C:\Program Files\Oracle\VirtualBox\;
+set PATH=%PATH%;C:\Program Files\Oracle\VirtualBox\;
 ```
 
 vagrant get status command
