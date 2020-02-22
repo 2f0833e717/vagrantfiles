@@ -5,13 +5,15 @@
 Windows10 Home
 
 ## Vagrant-Version
-```
+```[command pronpt]
+[command pronpt]
 vagrant -v
 Vagrant 2.2.6
 ```
 
-## VirtualBox-Version
-```
+## VirtualBox-Version  (if error resume next... this is Path error.)
+```[command pronpt]
+[command pronpt]
 VBoxManage -v
 6.0.14r133895
 ```
@@ -22,30 +24,35 @@ VBoxManage -v
 ```
 cmd
 ```
-```
+```[command pronpt]
+[command pronpt]
 powershell start cmd -verb runas & exit
 ```
 Yes
 
-### On command prompt
+### On command prompt (path setting :p)
 If use VBoxManage
-```
+```[command pronpt]
+[command pronpt]
 set PATH=%PATH%;C:\Program Files\Oracle\VirtualBox\;
 ```
 
 vagrant get status command
-```
+```[command pronpt]
+[command pronpt]
 vagrant global-status
 vagrant global-status --prune
 ```
 
 VirtualBox get virtual-machine-list command
-```
+```[command pronpt]
+[command pronpt]
 VBoxManage list vms
 ```
 
 vagrant init,start,restart,shutdown virtual-machine command
-```
+```[command pronpt]
+[command pronpt]
 vagrant init
 vagrant up
 vagrant reload
@@ -53,15 +60,43 @@ vagrant halt
 ```
 
 vagrant ssh connection command
-```
+```[command pronpt]
+[command pronpt]
 vagrant ssh
 ```
 
 vagrant plugin command
-```
+```[command pronpt]
+[command pronpt]
 vagrant plugin list
 vagrant plugin install {plugin-name1} {plugin-name2}
 vagrant plugin uninstall {plugin-name1} {plugin-name2}
+```
+
+vagrant plugin @vbguest unmatch version fix command
+```[command pronpt]
+[command pronpt]
+vagrant vbguest --status
+vagrant vbguest --do install
+
+#OR
+
+vagrant plugin uninstall vagrant-vbguest
+vagrant plugin install vagrant-vbguest
+vagrant reload
+```
+
+ubuntu 18.04 LTS settings ( CUI(bash) on GUI(Gnome) )
+```[bash]
+[bash]
+#Lock Screen Disable.
+gsettings set org.gnome.desktop.lockdown disable-lock-screen true
+```
+
+if ubuntu 18.04 LTS use [su -]
+```[bash]
+[bash]
+sudo -i
 ```
 
 ## !WARNING
